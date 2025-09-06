@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: receitron
+
+security:
+  jwt:
+    secret-key: baacf9a604e7375580a0dc632c7b4342f63ae25f7474b21a9c37a6e6c8a134b8
+    expiration-time: 3600000
