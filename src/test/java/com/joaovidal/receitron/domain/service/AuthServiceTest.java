@@ -33,13 +33,13 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
+    String email = "tester@email.com";
+    String password = "abc123";
+    String hashedPassword = "$adknjn(%sadnaln#@!";
+    String token = "ey18y1bnjsapjd91n32k3n1";
+
     @Test
     void ShouldAuthenticate() {
-        var email = "tester@email.com";
-        var password = "abc123";
-        var hashedPassword = "$adknjn(%sadnaln#@!";
-        var token = "ey18y1bnjsapjd91n32k3n1";
-
         User user = new User(UUID.randomUUID(),email, hashedPassword, Set.of("USER"));
 
         when(userRepositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
@@ -56,10 +56,6 @@ public class AuthServiceTest {
 
     @Test
     void ShouldRegisterUser() {
-        var email = "tester@email.com";
-        var password = "abc123";
-        var hashedPassword = "$adknjn(%sadnaln#@!";
-
         User user = new User(UUID.randomUUID(),email, password, Set.of("USER"));
 
         when(passwordEncoder.encode(password)).thenReturn(hashedPassword);
@@ -72,7 +68,14 @@ public class AuthServiceTest {
 
     @Test
     void ShouldThrowInvalidCredentials() {
+        User user = new User(UUID.randomUUID(),email, hashedPassword, Set.of("USER"));
 
+        when(userRepositoryPort.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {authService.authenticate(email, password);});
+        verify(userRepositoryPort, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(0)).matches(password, hashedPassword);
+        verify(tokenProviderPort, times(0)).generateToken(user);
     }
 
 }
