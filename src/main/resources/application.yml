@@ -2,6 +2,19 @@ spring:
   application:
     name: receitron
 
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
 security:
   jwt:
     secret-key: baacf9a604e7375580a0dc632c7b4342f63ae25f7474b21a9c37a6e6c8a134b8

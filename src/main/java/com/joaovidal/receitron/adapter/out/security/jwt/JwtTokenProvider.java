@@ -1,7 +1,7 @@
-package com.joaovidal.receitron.adapter.out.jwt;
+package com.joaovidal.receitron.adapter.out.security.jwt;
 
 import com.joaovidal.receitron.domain.model.User;
-import com.joaovidal.receitron.domain.port.token.TokenProviderPort;
+import com.joaovidal.receitron.domain.port.out.TokenProviderPort;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,7 +26,7 @@ public class JwtTokenProvider implements TokenProviderPort {
     @Override
     public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getUserName())
+                .setSubject(user.getEmail())
                 .claim("roles", user.getRoles())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -36,7 +36,7 @@ public class JwtTokenProvider implements TokenProviderPort {
 
     @Override
     public boolean isTokenValid(String token, User user) {
-        return extractUserName(token).equals(user.getUserName())
+        return extractUserName(token).equals(user.getEmail())
                 && !isTokenExpired(token);
     }
 

@@ -1,4 +1,4 @@
-package com.joaovidal.receitron.domain.port.token;
+package com.joaovidal.receitron.domain.port.out;
 
 
 import com.joaovidal.receitron.domain.model.User;

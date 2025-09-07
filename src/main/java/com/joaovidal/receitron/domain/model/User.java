@@ -1,18 +1,19 @@
 package com.joaovidal.receitron.domain.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class User {
 
     private UUID id;
-    private String userName;
+    private String email;
     private String password;
-    private List<String> roles;
+    private Set<String> roles = new HashSet<>();
 
-    public User(UUID id, String userName, String password, List<String> roles) {
+    public User(UUID id, String email, String password, Set<String> roles) {
         this.id = id;
-        this.userName = userName;
+        this.email = email;
         this.password = password;
         this.roles = roles;
     }
@@ -28,12 +29,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -44,11 +45,11 @@ public class User {
         this.password = password;
     }
 
-    public List<String> getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<String> roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 }
