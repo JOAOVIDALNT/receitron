@@ -27,13 +27,18 @@ public class AuthService implements SignupUseCase, LoginUseCase {
     @Override
     public void register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent(x -> {
+                    throw new ApiException("User already exists", HttpStatus.BAD_REQUEST);});
+
         userRepository.save(user);
     }
 
     @Override
     public UserLoginResponse authenticate(String email, String password) {
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND)); // TODO: CUSTOM EX
+                .orElseThrow(() -> new ApiException("Invalid login", HttpStatus.UNAUTHORIZED)); // TODO: CUSTOM EX
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new ApiException("Invalid login", HttpStatus.UNAUTHORIZED);

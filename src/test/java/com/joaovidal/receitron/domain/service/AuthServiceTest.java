@@ -1,5 +1,6 @@
 package com.joaovidal.receitron.domain.service;
 
+import com.joaovidal.receitron.adapter.in.exception.ApiException;
 import com.joaovidal.receitron.domain.model.User;
 import com.joaovidal.receitron.domain.port.out.TokenProviderPort;
 import com.joaovidal.receitron.domain.port.out.UserRepositoryPort;
@@ -9,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.Set;
@@ -67,15 +67,25 @@ public class AuthServiceTest {
     }
 
     @Test
-    void ShouldThrowInvalidCredentials() {
+    void ShouldThrowInvalidCredentialsOnAuthentication() {
         User user = new User(UUID.randomUUID(),email, hashedPassword, Set.of("USER"));
 
         when(userRepositoryPort.findByEmail(email)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> {authService.authenticate(email, password);});
+        assertThrows(ApiException.class, () -> {authService.authenticate(email, password);});
         verify(userRepositoryPort, times(1)).findByEmail(email);
         verify(passwordEncoder, times(0)).matches(password, hashedPassword);
         verify(tokenProviderPort, times(0)).generateToken(user);
     }
 
+    @Test
+    void ShouldThrowUserAlreadyExistsOnRegistration() {
+        User user = new User(UUID.randomUUID(),email, password, Set.of("USER"));
+        when(userRepositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
+
+        assertThrows(ApiException.class, () -> {authService.register(user);});
+        verify(userRepositoryPort, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(0)).matches(password, hashedPassword);
+        verify(tokenProviderPort, times(0)).generateToken(user);
+    }
 }
