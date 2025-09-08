@@ -35,9 +35,8 @@ public class JwtTokenProvider implements TokenProviderPort {
     }
 
     @Override
-    public boolean isTokenValid(String token, User user) {
-        return extractUserName(token).equals(user.getEmail())
-                && !isTokenExpired(token);
+    public boolean isTokenValid(String token) {
+        return !isTokenExpired(token);
     }
 
     @Override

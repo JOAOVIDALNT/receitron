@@ -13,7 +13,15 @@ public class UserEntityMapper {
     }
 
     public static UserEntity toEntity(User user) {
-        return new UserEntity(user.getId(), user.getEmail(), user.getPassword(), user.getRoles());
+        return UserEntity.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRoles())
+                .preferences(user.getPreferences())
+                .restrictions(user.getRestrictions())
+                .favoriteCultures(user.getFavoriteCultures())
+                .build();
     }
 
     public static List<User> toDomain(List<UserEntity> entities) {

@@ -1,5 +1,6 @@
 package com.joaovidal.receitron.adapter.in.security.jwt;
 
+import com.joaovidal.receitron.adapter.out.persistence.repository.UserRepository;
 import com.joaovidal.receitron.domain.model.User;
 import com.joaovidal.receitron.domain.port.out.TokenProviderPort;
 import com.joaovidal.receitron.domain.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,12 +25,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProviderPort tokenProvider;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final HandlerExceptionResolver exceptionResolver;
 
-    public JwtAuthenticationFilter(TokenProviderPort tokenProvider, UserService userService, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver) {
+    public JwtAuthenticationFilter(TokenProviderPort tokenProvider, UserRepository userRepository, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver) {
         this.tokenProvider = tokenProvider;
-        this.userService = userService;
+        this.userRepository = userRepository;
         this.exceptionResolver = exceptionResolver;
     }
 
@@ -51,9 +53,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userEmail != null && authentication == null) {
 
-                User user = this.userService.findByEmail(userEmail).get();
+                UserDetails user = this.userRepository.findByEmail(userEmail).get();
 
-                if (tokenProvider.isTokenValid(jwt, user)) {
+                if (tokenProvider.isTokenValid(jwt)) {
                     var roles = tokenProvider.extractRoles(jwt);
                     var authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
 
