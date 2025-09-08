@@ -71,12 +71,32 @@ public class MealdbApiAdapter implements MealdbApiPort {
 
     @Override
     public List<Recipe> getRecipesByCulture(String culture) {
-        return List.of();
+        var result =  webClient.get()
+                .uri("filter.php?a="+culture)
+                .retrieve()
+                .bodyToMono(SimpleRecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().map(x -> new Recipe(x.id(), x.title())).toList();
     }
 
     @Override
     public List<Recipe> getRecipesByCategory(String category) {
-        return List.of();
+        var result =  webClient.get()
+                .uri("filter.php?c="+category)
+                .retrieve()
+                .bodyToMono(SimpleRecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().map(x -> new Recipe(x.id(), x.title())).toList();
     }
 
     @Override

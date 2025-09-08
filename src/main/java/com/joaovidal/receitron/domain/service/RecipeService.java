@@ -62,7 +62,7 @@ public class RecipeService implements SuggestRecipeUseCase {
                     var cultureList = mealdbApiPort.getRecipesByCulture(x); // TODO: CREATE SIMPLERECIPE
                     cultureList.stream().findAny().ifPresent(y -> {
                         var recipe = mealdbApiPort.getRecipeById(y.getId());
-                        menu.add(recipe);
+                        if (!user.getRestrictions().contains(recipe.getCategory())) menu.add(recipe);
                     });
                 });
             }
@@ -75,7 +75,7 @@ public class RecipeService implements SuggestRecipeUseCase {
                     var categoryList = mealdbApiPort.getRecipesByCategory(x);
                     categoryList.stream().findAny().ifPresent(y -> {
                         var recipe = mealdbApiPort.getRecipeById(y.getId());
-                        menu.add(recipe);
+                        if (!user.getRestrictions().contains(recipe.getCategory())) menu.add(recipe);
                     });
                 });
             }

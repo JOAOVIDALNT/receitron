@@ -1,29 +1,34 @@
 package com.joaovidal.receitron.domain.model;
 
 public class Recipe {
-    private int Id;
+    private int id;
     private String title;
     private String category;
     private String culture;
     private String instructions;
 
     public Recipe(int id, String title, String category, String culture, String instructions) {
-        Id = id;
+        this.id = id;
         this.title = title;
         this.category = category;
         this.culture = culture;
         this.instructions = instructions;
     }
 
+    public Recipe(int id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     public Recipe() {
     }
 
     public int getId() {
-        return Id;
+        return this.id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getTitle() {
