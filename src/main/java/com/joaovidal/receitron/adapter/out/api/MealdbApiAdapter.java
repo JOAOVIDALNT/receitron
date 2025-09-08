@@ -68,4 +68,19 @@ public class MealdbApiAdapter implements MealdbApiPort {
                 .map(x -> new Recipe(x.id(), x.title(), x.category(), x.culture(), x.instructions()))
                 .orElseThrow(() -> new ApiException("No recipe found", HttpStatus.NOT_FOUND));
     }
+
+    @Override
+    public List<Recipe> getRecipesByCulture(String culture) {
+        return List.of();
+    }
+
+    @Override
+    public List<Recipe> getRecipesByCategory(String category) {
+        return List.of();
+    }
+
+    @Override
+    public Recipe getRecipeById(int id) {
+        return null;
+    }
 }

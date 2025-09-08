@@ -8,4 +8,7 @@ public interface MealdbApiPort {
     List<String> listCultures();
     List<String> listCategories();
     Recipe getRandomRecipe();
+    List<Recipe> getRecipesByCulture(String culture);
+    List<Recipe> getRecipesByCategory(String category);
+    Recipe getRecipeById(int id);
 }
