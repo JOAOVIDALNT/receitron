@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("auth/")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -22,14 +22,14 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> reigster(@RequestBody UserSignupRequest request) {
         authService.register(UserDtoMapper.toDomain(request));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         var response = authService.authenticate(request.email(), request.password());
 
