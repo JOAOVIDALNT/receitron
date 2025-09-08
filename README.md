@@ -83,6 +83,109 @@ A parte lógica relacionada a sugestão de receitas, considera as preferências 
 - Api: a escolha da Api foi tecnica, elaborei o projeto baseado em outra api de nutrição sugerida que por sua vez tinha uma grande limitação no uso gratuito.
 
 
+## Como executar localmente
 
+Eu recomendo rodar em container Docker, pra isso, deixei tudo configurado. Basta ter o Docker instalado e rodar o seguinte comando:
+```bash
+docker compose up --build
+```
+
+O projeto está rodando na versão 21 do java caso queira testar localmente e utilizei o maven como gerenciador de dependências,
+
+Também disponibilizei uma collection do postman com tudo configurado para executar o fluxo lógico da aplicação "./receitron.postman_collection.json".
+
+Para rodar os testes:
+```bash
+mvn test
+```
+
+## Exemplos de uso com resultados reais
+
+- POST /auth/signup
+req:
+```json
+{
+  "email": "tester@gmail.com",
+  "password": "abcd1234"
+}
+```
+Response, se válido: Status 201 Created.
+
+- POST /auth/login
+req:
+```json
+{
+    "email": "tester@gmail.com",
+    "password": "abcd1234"
+}
+```
+res:
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0ZXJAZ21haWwuY29tIiwicm9sZXMiOlsiVVNFUiJdLCJleHAiOjE3NTczNTM0NTksImlhdCI6MTc1NzM0OTg1OX0.4nw6pxMjqUBrsrTCP2zlgK1PSpB02nCsSV49h84UW6w",
+    "roles": [
+        "USER"
+    ]
+}
+```
+
+- POST /user/add/cultures
+req:
+```json
+[
+    "Chinese", "Italian"
+]
+```
+res: UserInfo
+
+- POST /user/add/preferences
+req:
+```json
+[
+    "Pork", "Lamb"
+]
+```
+res: UserInfo
+
+- POST /user/add/restrictions
+req:
+```json
+[
+    "Vegan", "Vegetarian"
+]
+```
+
+- GET /recipe/suggest
+res:
+```json
+{
+    "id": 52831,
+    "title": "Chicken Karaage",
+    "category": "Chicken",
+    "culture": "Japanese",
+    "instructions": "Instructions..."
+}
+```
+
+- GET /recipe/weekly-menu
+res:
+```json
+[
+  {
+    "id": 53019,
+    "title": "Pierogi (Polish Dumplings)",
+    "category": "Side",
+    "culture": "Polish",
+    "instructions": "Instructions..."
+  },
+  {
+    "id": 52964,
+    "title": "Smoked Haddock Kedgeree",
+    "category": "Breakfast",
+    "culture": "Indian",
+    "instructions": "Instructions..."
+  }
+]
+```
 
 
