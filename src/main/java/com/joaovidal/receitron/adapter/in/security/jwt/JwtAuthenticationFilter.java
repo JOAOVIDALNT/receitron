@@ -57,7 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (tokenProvider.isTokenValid(jwt)) {
                     var roles = tokenProvider.extractRoles(jwt);
-                    var authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
+                    var authorities = roles
+                            .stream()
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                            .toList();
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
 
