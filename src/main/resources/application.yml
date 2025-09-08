@@ -3,9 +3,7 @@ server:
 spring:
   application:
     name: receitron
-  redis:
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
+
   h2:
     console:
       enabled: true

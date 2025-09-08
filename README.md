@@ -79,7 +79,7 @@ A parte lógica relacionada a sugestão de receitas, considera as preferências 
 ## Decisões técnicas e tradeoffs
 
 - Autenticação: embora não fosse demandado, é um conceito que gosto de explorar e eu quis aplica-lo dentro dessa arquitetura, ainda que tenha custado tempo valeu a pena por como o usuário interage com o negócio.
-- Redis: algumas operações na api externa gastariam demasiado tempo caso fossem chamadas todas as vezes, utilizei redis e algumas requisiçoes estão 500% mais rápidas.
+- Redis: algumas operações na api externa gastariam demasiado tempo caso fossem chamadas todas as vezes, utilizei redis e algumas requisiçoes estão 500% mais rápidas, no entanto, diquei das 6h ao 12h tentando entende o comportamento estranho do cache ao subir me containers Docker e desisti em nome da entrega.
 - Api: a escolha da Api foi tecnica, elaborei o projeto baseado em outra api de nutrição sugerida que por sua vez tinha uma grande limitação no uso gratuito.
 
 

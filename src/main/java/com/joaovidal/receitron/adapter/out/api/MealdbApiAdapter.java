@@ -7,6 +7,7 @@ import com.joaovidal.receitron.domain.port.out.MealdbApiPort;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -21,29 +22,33 @@ public class MealdbApiAdapter implements MealdbApiPort {
     }
 
     @Override
-    @Cacheable(cacheNames = "cultures")
     public List<String> listCultures() {
-        var result =  webClient.get()
+        RestClient restClient = RestClient.builder()
+                .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+                .build();
+
+        CultureResponse result = restClient.get()
                 .uri("list.php?a=list")
                 .retrieve()
-                .bodyToMono(CultureResponse.class)
-                .block();
+                .body(CultureResponse.class);
 
         if (result == null || result.meals() == null) {
-            throw new ApiException("Failed to fetch cultures", HttpStatus.BAD_GATEWAY);
+            throw new ApiException("Failed to fetch categories", HttpStatus.BAD_GATEWAY);
         }
 
         return result.meals().stream().map(CultureObject::culture).toList();
     }
 
     @Override
-    @Cacheable(cacheNames = "categories")
     public List<String> listCategories() {
-        var result =  webClient.get()
+        RestClient restClient = RestClient.builder()
+                .baseUrl("https://www.themealdb.com/api/json/v1/1/")
+                .build();
+
+        CategoryResponse result = restClient.get()
                 .uri("list.php?c=list")
                 .retrieve()
-                .bodyToMono(CategoryResponse.class)
-                .block();
+                .body(CategoryResponse.class);
 
         if (result == null || result.meals() == null) {
             throw new ApiException("Failed to fetch categories", HttpStatus.BAD_GATEWAY);
@@ -70,7 +75,7 @@ public class MealdbApiAdapter implements MealdbApiPort {
     }
 
     @Override
-    @Cacheable(cacheNames = "recipesByCulture", key = "#culture")
+//    @Cacheable(cacheNames = "recipesByCulture", key = "#culture")
     public List<Recipe> getRecipesByCulture(String culture) {
         var result =  webClient.get()
                 .uri("filter.php?a="+culture)
@@ -86,7 +91,7 @@ public class MealdbApiAdapter implements MealdbApiPort {
     }
 
     @Override
-    @Cacheable(cacheNames = "recipesByCategory", key = "#category")
+//    @Cacheable(cacheNames = "recipesByCategory", key = "#category")
     public List<Recipe> getRecipesByCategory(String category) {
         var result =  webClient.get()
                 .uri("filter.php?c="+category)
