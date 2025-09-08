@@ -72,6 +72,9 @@ public class UserService implements FindUserUseCase, UpdateUserUseCase {
         var user = userRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
 
+        if (user.getRestrictions().size() >= 10) {
+            throw new ApiException("Maximum of restrictions exceeded", HttpStatus.BAD_REQUEST);
+        }
         var avaliableCategories = mealdbApiPort.listCategories();
 
         restrictions.forEach(x -> {

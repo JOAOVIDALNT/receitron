@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping("/add/restrictions")
     public ResponseEntity<?> addRestrictions(@RequestBody List<String> restrictions, @AuthenticationPrincipal UserDetails userDetails) {
-        var user = userService.addPreferences(userDetails.getUsername(), restrictions);
+        var user = userService.addRestrictions(userDetails.getUsername(), restrictions);
         return ResponseEntity.ok(user);
     }
 }

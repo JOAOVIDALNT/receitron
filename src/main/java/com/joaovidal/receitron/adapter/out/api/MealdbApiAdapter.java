@@ -1,10 +1,8 @@
 package com.joaovidal.receitron.adapter.out.api;
 
 import com.joaovidal.receitron.adapter.in.exception.ApiException;
-import com.joaovidal.receitron.adapter.in.web.dto.CategoryObject;
-import com.joaovidal.receitron.adapter.in.web.dto.CategoryResponse;
-import com.joaovidal.receitron.adapter.in.web.dto.CultureObject;
-import com.joaovidal.receitron.adapter.in.web.dto.CultureResponse;
+import com.joaovidal.receitron.adapter.in.web.dto.*;
+import com.joaovidal.receitron.domain.model.Recipe;
 import com.joaovidal.receitron.domain.port.out.MealdbApiPort;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -48,9 +46,75 @@ public class MealdbApiAdapter implements MealdbApiPort {
                 .block();
 
         if (result == null || result.meals() == null) {
-            throw new ApiException("Failed to fetch cultures", HttpStatus.BAD_GATEWAY);
+            throw new ApiException("Failed to fetch categories", HttpStatus.BAD_GATEWAY);
         }
 
         return result.meals().stream().map(CategoryObject::category).toList();
+    }
+
+    @Override
+    public Recipe getRandomRecipe() {
+        var result =  webClient.get()
+                .uri("random.php")
+                .retrieve()
+                .bodyToMono(RecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipes", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().findFirst()
+                .map(x -> new Recipe(x.id(), x.title(), x.category(), x.culture(), x.instructions()))
+                .orElseThrow(() -> new ApiException("No recipe found", HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    @Cacheable(cacheNames = "recipesByCulture", key = "#culture")
+    public List<Recipe> getRecipesByCulture(String culture) {
+        var result =  webClient.get()
+                .uri("filter.php?a="+culture)
+                .retrieve()
+                .bodyToMono(SimpleRecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipes", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().map(x -> new Recipe(x.id(), x.title())).toList();
+    }
+
+    @Override
+    @Cacheable(cacheNames = "recipesByCategory", key = "#category")
+    public List<Recipe> getRecipesByCategory(String category) {
+        var result =  webClient.get()
+                .uri("filter.php?c="+category)
+                .retrieve()
+                .bodyToMono(SimpleRecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().map(x -> new Recipe(x.id(), x.title())).toList();
+    }
+
+    @Override
+    public Recipe getRecipeById(int id) {
+        var result =  webClient.get()
+                .uri("lookup.php?i="+id)
+                .retrieve()
+                .bodyToMono(RecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().findFirst()
+                .map(x -> new Recipe(x.id(), x.title(), x.category(), x.culture(), x.instructions()))
+                .orElseThrow(() -> new ApiException("No recipe found", HttpStatus.NOT_FOUND));
     }
 }
