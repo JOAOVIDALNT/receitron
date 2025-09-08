@@ -1,0 +1,257 @@
+{
+	"info": {
+		"_postman_id": "2a368a3c-ca7d-425e-b829-d091d85b9d72",
+		"name": "receitron",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23183549"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"tester@gmail.com\",\r\n    \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"jwt_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"tester@gmail.com\",\r\n    \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "recipe",
+			"item": [
+				{
+					"name": "suggest",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/recipe/suggest",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"recipe",
+								"suggest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "weekly-menu",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/recipe/weekly-menu",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"recipe",
+								"weekly-menu"
+							]
+						},
+						"description": "## Weekly Menu API\n\n### Endpoint\n\n`GET {{base_url}}/recipe/weekly-menu`\n\n### Description\n\nThis endpoint retrieves the weekly menu of recipes. It provides a structured response containing details about each recipe available for the week.\n\n### Request Method\n\n- **GET**: This method is used to request data from the specified resource.\n    \n\n### Response Format\n\n- **Status Code**: `200 OK` indicates that the request was successful.\n    \n- **Content-Type**: `application/json` signifies that the response is in JSON format.\n    \n\n### Response Body\n\nThe response body contains an array of recipe objects, each with the following properties:\n\n- `id`: A unique identifier for the recipe.\n    \n- `title`: The name of the recipe.\n    \n- `category`: The category under which the recipe falls.\n    \n- `culture`: The cultural origin of the recipe.\n    \n- `instructions`: Step-by-step instructions for preparing the recipe.\n    \n\n### Example Response\n\n``` json\n[\n    {\n        \"id\": 0,\n        \"title\": \"\",\n        \"category\": \"\",\n        \"culture\": \"\",\n        \"instructions\": \"\"\n    }\n]\n\n ```\n\nThis endpoint is useful for applications that need to display a list of recipes available for the week, allowing users to explore various culinary options."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "cultures",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"Chinese\", \"Italian\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/add/cultures",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"add",
+								"cultures"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "preferences",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"Pork\", \"Lamb\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/add/preferences",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"add",
+								"preferences"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restrictions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \"Vegan\", \"Vegetarian\"\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/add/restrictions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"add",
+								"restrictions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
