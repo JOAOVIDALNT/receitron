@@ -4,13 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -19,7 +16,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class UserEntity {
+public class UserEntity implements UserDetails {
     @Id
     @Column(nullable = false)
     private UUID id;
@@ -31,5 +28,26 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
     private Set<String> roles = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<String> favoriteCultures = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<String> preferences = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<String> restrictions = new HashSet<>();
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }

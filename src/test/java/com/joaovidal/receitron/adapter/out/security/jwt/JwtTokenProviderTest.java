@@ -23,7 +23,7 @@ public class JwtTokenProviderTest {
         var token = provider.generateToken(user);
 
         assertTrue(token.startsWith("ey"));
-        assertTrue(provider.isTokenValid(token, user));
+        assertTrue(provider.isTokenValid(token));
         assertEquals(provider.extractUserName(token), user.getEmail());
     }
 
@@ -32,6 +32,6 @@ public class JwtTokenProviderTest {
         var user = new User(UUID.randomUUID(), "tester", "passsss", Set.of("USER"));
         var token = provider.generateToken(user);
 
-        assertThrows(SignatureException.class, () -> { provider.isTokenValid(token + "birotoken", user);});
+        assertThrows(SignatureException.class, () -> { provider.isTokenValid(token + "birotoken");});
     }
 }
