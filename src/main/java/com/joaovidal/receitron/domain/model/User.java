@@ -21,6 +21,16 @@ public class User {
         this.roles = roles;
     }
 
+    public User(UUID id, String email, String password, Set<String> roles, Set<String> favoriteCultures, Set<String> preferences, Set<String> restrictions) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.favoriteCultures = favoriteCultures;
+        this.preferences = preferences;
+        this.restrictions = restrictions;
+    }
+
     public User() {
     }
 

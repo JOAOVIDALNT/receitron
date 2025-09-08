@@ -9,7 +9,13 @@ import java.util.Set;
 public class UserEntityMapper {
 
     public static User toDomain(UserEntity entity) {
-        return new User(entity.getId(), entity.getEmail(), entity.getPassword(), entity.getRoles());
+        return new User(entity.getId(),
+                entity.getEmail(),
+                entity.getPassword(),
+                entity.getRoles(),
+                entity.getFavoriteCultures(),
+                entity.getPreferences(),
+                entity.getRestrictions());
     }
 
     public static UserEntity toEntity(User user) {
