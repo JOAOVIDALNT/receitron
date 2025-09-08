@@ -22,4 +22,10 @@ public class RecipeController {
         var recipe = recipeService.suggestRecipe(userDetails.getUsername());
         return ResponseEntity.ok(recipe);
     }
+
+    @GetMapping("/weekly-menu")
+    public ResponseEntity<?> weeklyMenu(@AuthenticationPrincipal UserDetails userDetails) {
+        var recipes = recipeService.weeklyMenu(userDetails.getUsername());
+        return ResponseEntity.ok(recipes);
+    }
 }

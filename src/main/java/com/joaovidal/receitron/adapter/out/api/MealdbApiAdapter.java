@@ -61,7 +61,7 @@ public class MealdbApiAdapter implements MealdbApiPort {
                 .block();
 
         if (result == null || result.recipe() == null) {
-            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+            throw new ApiException("Failed to fetch recipes", HttpStatus.BAD_GATEWAY);
         }
 
         return result.recipe().stream().findFirst()
@@ -70,6 +70,7 @@ public class MealdbApiAdapter implements MealdbApiPort {
     }
 
     @Override
+    @Cacheable(cacheNames = "recipesByCulture", key = "#culture")
     public List<Recipe> getRecipesByCulture(String culture) {
         var result =  webClient.get()
                 .uri("filter.php?a="+culture)
@@ -78,13 +79,14 @@ public class MealdbApiAdapter implements MealdbApiPort {
                 .block();
 
         if (result == null || result.recipe() == null) {
-            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+            throw new ApiException("Failed to fetch recipes", HttpStatus.BAD_GATEWAY);
         }
 
         return result.recipe().stream().map(x -> new Recipe(x.id(), x.title())).toList();
     }
 
     @Override
+    @Cacheable(cacheNames = "recipesByCategory", key = "#category")
     public List<Recipe> getRecipesByCategory(String category) {
         var result =  webClient.get()
                 .uri("filter.php?c="+category)
@@ -101,6 +103,18 @@ public class MealdbApiAdapter implements MealdbApiPort {
 
     @Override
     public Recipe getRecipeById(int id) {
-        return null;
+        var result =  webClient.get()
+                .uri("lookup.php?i="+id)
+                .retrieve()
+                .bodyToMono(RecipeResponse.class)
+                .block();
+
+        if (result == null || result.recipe() == null) {
+            throw new ApiException("Failed to fetch recipe", HttpStatus.BAD_GATEWAY);
+        }
+
+        return result.recipe().stream().findFirst()
+                .map(x -> new Recipe(x.id(), x.title(), x.category(), x.culture(), x.instructions()))
+                .orElseThrow(() -> new ApiException("No recipe found", HttpStatus.NOT_FOUND));
     }
 }

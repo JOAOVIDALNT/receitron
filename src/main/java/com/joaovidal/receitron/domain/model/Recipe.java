@@ -1,6 +1,8 @@
 package com.joaovidal.receitron.domain.model;
 
-public class Recipe {
+import java.io.Serializable;
+
+public class Recipe implements Serializable {
     private int id;
     private String title;
     private String category;
