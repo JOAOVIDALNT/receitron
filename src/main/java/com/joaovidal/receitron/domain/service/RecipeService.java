@@ -62,12 +62,18 @@ public class RecipeService implements SuggestRecipeUseCase {
                     var cultureList = mealdbApiPort.getRecipesByCulture(x); // TODO: CREATE SIMPLERECIPE
                     cultureList.stream().findAny().ifPresent(y -> {
                         var recipe = mealdbApiPort.getRecipeById(y.getId());
-                        if (!user.getRestrictions().contains(recipe.getCategory())) menu.add(recipe);
+                        if (!user.getRestrictions().contains(recipe.getCategory())
+                                && menu.stream().noneMatch(z -> z.getId() == y.getId())) {
+                            menu.add(recipe);
+                        }
                     });
                 });
             }
             else {
-                menu.add(suggestRecipe(email));
+                var recipe = suggestRecipe(email);
+                if (menu.stream().noneMatch(x -> x.getId() == recipe.getId())) {
+                    menu.add(suggestRecipe(email));
+                }
             }
 
             if (hasAnyPreferences && index % 2 == 0) {
@@ -75,12 +81,18 @@ public class RecipeService implements SuggestRecipeUseCase {
                     var categoryList = mealdbApiPort.getRecipesByCategory(x);
                     categoryList.stream().findAny().ifPresent(y -> {
                         var recipe = mealdbApiPort.getRecipeById(y.getId());
-                        if (!user.getRestrictions().contains(recipe.getCategory())) menu.add(recipe);
+                        if (!user.getRestrictions().contains(recipe.getCategory())
+                        && menu.stream().noneMatch(z -> z.getId() == y.getId())) {
+                            menu.add(recipe);
+                        }
                     });
                 });
             }
             else {
-                menu.add(suggestRecipe(email));
+                var recipe = suggestRecipe(email);
+                if (menu.stream().noneMatch(x -> x.getId() == recipe.getId())) {
+                    menu.add(suggestRecipe(email));
+                }
             }
 
 
