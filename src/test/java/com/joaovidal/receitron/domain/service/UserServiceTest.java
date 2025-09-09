@@ -49,7 +49,6 @@ public class UserServiceTest {
 
     @Test
     void shouldThrowUserNotFound() {
-        User user = new User(UUID.randomUUID(),email, "password", Set.of("USER"));
         when(repositoryPort.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(ApiException.class, () -> {userService.findByEmail(email);});
