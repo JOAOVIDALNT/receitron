@@ -31,6 +31,10 @@ jobs:
       - name: Run tests
         run: mvn clean verify
       
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Jacoco badge generate
         uses: cicirello/jacoco-badge-generator@v2
         with:
