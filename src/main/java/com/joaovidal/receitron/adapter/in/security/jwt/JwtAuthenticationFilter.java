@@ -2,14 +2,13 @@ package com.joaovidal.receitron.adapter.in.security.jwt;
 
 import com.joaovidal.receitron.adapter.in.exception.ApiException;
 import com.joaovidal.receitron.adapter.out.persistence.repository.UserRepository;
-import com.joaovidal.receitron.domain.model.User;
 import com.joaovidal.receitron.domain.port.out.TokenProviderPort;
-import com.joaovidal.receitron.domain.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +24,9 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    @Value("${app.skip-auth:false}")
+    private boolean skipAuth;
 
     private final TokenProviderPort tokenProvider;
     private final UserRepository userRepository;
@@ -42,7 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         String path = request.getRequestURI();
-        if (path.startsWith("/auth") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+        if (path.startsWith("/auth") ||
+                path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                skipAuth) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalid or not present");
             return;
         }
+
 
         try {
             final String jwt = authHeader.substring(7);
