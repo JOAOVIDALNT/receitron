@@ -9,7 +9,8 @@ novas receitas e montar cardápios semanais estratégicos, assim o usuário
 pode explorar novas receitas, culturas e combinações, avaliar e redefinir
 suas preferências de acordo com os pratos experimentados.
 
-<hr>
+<br>
+<br>
 
 ## Arquitetura escolhida e justificativa
 Recentemente um programador experiente me perguntou se eu conhecia ou já tinha trabalhado com o padrão arquitetural hexagonal (ports and adapters). O fato de eu não conhecer e de esse padrão ser tão relevante, junto com todas as suas valências me motivaram. Parece fácil seguir os princípios SOLID (principalmente no spring que abstrai muito da configuração e te prender em um padrão mais acoplado) com uma arquitetura bem definida e robusta. Foi um desafio legal, gostei bastante.
@@ -19,7 +20,8 @@ Referências para tomadas de decisões acerca da arquitetura:
 - Hexagonal Architecture in Spring Boot: A Practical Guide: https://dev.to/jhonifaber/hexagonal-architecture-or-port-adapters-23ed
 - Um repositório aleatório que eu encontrei com a implementação: https://github.com/aleccanto/hexagonal-exemple-springboot
 
-<hr>
+<br>
+<br>
 
 ## Algoritmos e lógicas de negócio explicados
 A aplicação tem 2 pontos centrais bem definidos: cadastro de preferências e receitas sugeridas.
@@ -81,7 +83,8 @@ A parte lógica relacionada a sugestão de receitas, considera as preferências 
 - preferencias do usuário e suas culturas favoritas são prioridades no menu mas outros pratos não restringidos também podem aparecer.
 - a endpoint de sugestão não considera preferências, só restrições.
 
-<hr>
+<br>
+<br>
 
 ## Decisões técnicas e tradeoffs
 
@@ -90,7 +93,8 @@ A parte lógica relacionada a sugestão de receitas, considera as preferências 
 
 ps: Cache cai como uma luva nas requisições pra api externa no caso dessa aplicação, uma das decisões técnicas foi a necessidade de abrir mão do cache, que havia aprimorado mutio a performance da aplicação, no entando, ao subir a aplicação e o redis em container, por algum motivo ainda não descoberto a aplicação quebrava, em nome da entrega o cache foi desabilitado mas deve ser convertido em um feature futuramente.
 
-<hr>
+<br>
+<br>
 
 ## Como executar localmente
 
@@ -112,7 +116,8 @@ Para rodar os testes:
 mvn test
 ```
 
-<hr>
+<br>
+<br>
 
 ## Exemplos de uso com resultados reais
 
