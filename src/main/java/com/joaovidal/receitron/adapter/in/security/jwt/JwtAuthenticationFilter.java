@@ -1,5 +1,6 @@
 package com.joaovidal.receitron.adapter.in.security.jwt;
 
+import com.joaovidal.receitron.adapter.in.exception.ApiException;
 import com.joaovidal.receitron.adapter.out.persistence.repository.UserRepository;
 import com.joaovidal.receitron.domain.model.User;
 import com.joaovidal.receitron.domain.port.out.TokenProviderPort;
@@ -9,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,8 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String path = request.getRequestURI();
+        if (path.startsWith("/auth") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
             filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token invalid or not present");
             return;
         }
 
@@ -53,7 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (userEmail != null && authentication == null) {
 
-                UserDetails user = this.userRepository.findByEmail(userEmail).get();
+                UserDetails user = this.userRepository.findByEmail(userEmail).orElseThrow(
+                        () -> new ApiException("Non authenticated user", HttpStatus.UNAUTHORIZED)
+                );
 
                 if (tokenProvider.isTokenValid(jwt)) {
                     var roles = tokenProvider.extractRoles(jwt);

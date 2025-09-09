@@ -36,16 +36,18 @@ public class UserService implements FindUserUseCase, UpdateUserUseCase {
         var user = userRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
 
-        var avaliableCultures = mealdbApiPort.listCultures();
+        var avaliableCultures = mealdbApiPort.listCultures().stream().map(String::toLowerCase).toList();
+
 
         cultures.forEach(x -> {
-            if (!avaliableCultures.contains(x)) {
+            if (!avaliableCultures.contains(x.toLowerCase())) {
                 throw new ApiException(String.format("Sorry, culture %s doesn't have data", x), HttpStatus.BAD_REQUEST);
             }
-            user.getFavoriteCultures().add(x);
+            user.getFavoriteCultures().add(x.toLowerCase());
         });
 
         userRepositoryPort.save(user);
+        user.setPassword("");
         return user;
     }
 
@@ -54,16 +56,17 @@ public class UserService implements FindUserUseCase, UpdateUserUseCase {
         var user = userRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new ApiException("User not found", HttpStatus.NOT_FOUND));
 
-        var avaliableCategories = mealdbApiPort.listCategories();
+        var avaliableCategories = mealdbApiPort.listCategories().stream().map(String::toLowerCase).toList();
 
         preferences.forEach(x -> {
-            if (!avaliableCategories.contains(x)) {
+            if (!avaliableCategories.contains(x.toLowerCase())) {
                 throw new ApiException(String.format("Sorry, category %s doesn't have data", x), HttpStatus.BAD_REQUEST);
             }
-            user.getPreferences().add(x);
+            user.getPreferences().add(x.toLowerCase());
         });
 
         userRepositoryPort.save(user);
+        user.setPassword("");
         return user;
     }
 
@@ -75,16 +78,17 @@ public class UserService implements FindUserUseCase, UpdateUserUseCase {
         if (user.getRestrictions().size() >= 10) {
             throw new ApiException("Maximum of restrictions exceeded", HttpStatus.BAD_REQUEST);
         }
-        var avaliableCategories = mealdbApiPort.listCategories();
+        var avaliableCategories = mealdbApiPort.listCategories().stream().map(String::toLowerCase).toList();
 
         restrictions.forEach(x -> {
-            if (!avaliableCategories.contains(x)) {
+            if (!avaliableCategories.contains(x.toLowerCase())) {
                 throw new ApiException(String.format("Sorry, category %s doesn't have data", x), HttpStatus.BAD_REQUEST);
             }
-            user.getRestrictions().add(x);
+            user.getRestrictions().add(x.toLowerCase());
         });
 
         userRepositoryPort.save(user);
+        user.setPassword("");
         return user;
     }
 }

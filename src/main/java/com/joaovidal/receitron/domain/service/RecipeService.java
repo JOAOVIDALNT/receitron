@@ -34,7 +34,7 @@ public class RecipeService implements SuggestRecipeUseCase {
 
         do {
             var randomRecipe = mealdbApiPort.getRandomRecipe();
-            if (!user.getRestrictions().contains(randomRecipe.getCategory())) {
+            if (!user.getRestrictions().contains(randomRecipe.getCategory().toLowerCase())) {
                 recipe = randomRecipe;
                 found = true;
             }
@@ -59,10 +59,11 @@ public class RecipeService implements SuggestRecipeUseCase {
         do {
             if (hasAnyFavoriteCulture && index % 2 != 0) {
                 user.getFavoriteCultures().stream().findAny().ifPresent(x -> {
-                    var cultureList = mealdbApiPort.getRecipesByCulture(x); // TODO: CREATE SIMPLERECIPE
+                    var cultureList = mealdbApiPort.getRecipesByCulture(x);
+
                     cultureList.stream().findAny().ifPresent(y -> {
                         var recipe = mealdbApiPort.getRecipeById(y.getId());
-                        if (!user.getRestrictions().contains(recipe.getCategory())
+                        if (!user.getRestrictions().contains(recipe.getCategory().toLowerCase())
                                 && menu.stream().noneMatch(z -> z.getId() == y.getId())) {
                             menu.add(recipe);
                         }
@@ -72,7 +73,7 @@ public class RecipeService implements SuggestRecipeUseCase {
             else {
                 var recipe = suggestRecipe(email);
                 if (menu.stream().noneMatch(x -> x.getId() == recipe.getId())) {
-                    menu.add(suggestRecipe(email));
+                    menu.add(recipe);
                 }
             }
 
@@ -81,7 +82,7 @@ public class RecipeService implements SuggestRecipeUseCase {
                     var categoryList = mealdbApiPort.getRecipesByCategory(x);
                     categoryList.stream().findAny().ifPresent(y -> {
                         var recipe = mealdbApiPort.getRecipeById(y.getId());
-                        if (!user.getRestrictions().contains(recipe.getCategory())
+                        if (!user.getRestrictions().contains(recipe.getCategory().toLowerCase())
                         && menu.stream().noneMatch(z -> z.getId() == y.getId())) {
                             menu.add(recipe);
                         }
@@ -91,7 +92,7 @@ public class RecipeService implements SuggestRecipeUseCase {
             else {
                 var recipe = suggestRecipe(email);
                 if (menu.stream().noneMatch(x -> x.getId() == recipe.getId())) {
-                    menu.add(suggestRecipe(email));
+                    menu.add(recipe);
                 }
             }
 
