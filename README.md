@@ -1,4 +1,5 @@
-# RECEITRON
+<h1 align="center">RECEITRON</h1>
+
 
 <br>
 
