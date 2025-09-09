@@ -1,4 +1,7 @@
 <h1 align="center">RECEITRON</h1>
+<p align="center">
+  <img src=".github/badges/jacoco.svg" alt="Cobertura de testes">
+</p>
 
 
 <br>
