@@ -54,24 +54,24 @@ public class RecipeServiceTest {
                 email,
                 "password",
                 Set.of("USER"),
-                Set.of("Brazilian"),
-                Set.of("Beef"),
-                Set.of("Vegan")
+                Set.of("brazilian"),
+                Set.of("beef"),
+                Set.of("vegan")
         );
 
         when(userRepositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
 
-        when(mealdbApiPort.getRecipesByCulture("Brazilian"))
+        when(mealdbApiPort.getRecipesByCulture("brazilian"))
                 .thenReturn(List.of(new Recipe(1, "feijuca")));
 
-        when(mealdbApiPort.getRecipesByCategory("Beef"))
+        when(mealdbApiPort.getRecipesByCategory("beef"))
                 .thenReturn(List.of(new Recipe(2, "carninha")));
 
         when(mealdbApiPort.getRecipeById(anyInt()))
-                .thenReturn(new Recipe(3, "Feijoada", "Beef", "Brazilian", "cozinhe tudo"));
+                .thenReturn(new Recipe(3, "feijoada", "beef", "brazilian", "cozinhe tudo"));
 
         when(mealdbApiPort.getRandomRecipe())
-                .thenReturn(new Recipe(4, "random", "Lamb", "Mexican", "misture tudo"));
+                .thenReturn(new Recipe(4, "random", "lamb", "mexican", "misture tudo"));
 
         var recipes = recipeService.weeklyMenu(email);
 

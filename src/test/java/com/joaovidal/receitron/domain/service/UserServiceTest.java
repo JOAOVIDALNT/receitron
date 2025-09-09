@@ -58,45 +58,45 @@ public class UserServiceTest {
 
     @Test
     void shouldFetchAndAddCulture() {
-        var mockResponse = new CultureResponse(List.of(new CultureObject("Brazilian")));
+        var mockResponse = new CultureResponse(List.of(new CultureObject("brazilian")));
         when(mealdbApiPort.listCultures()).thenReturn(mockResponse.meals().stream().map(CultureObject::culture).toList());
 
         User user = new User(UUID.randomUUID(),email, "password", Set.of("USER"));
         when(repositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
 
-        var result = userService.addCultures(email, List.of("Brazilian"));
+        var result = userService.addCultures(email, List.of("brazilian"));
 
-        assertEquals("Brazilian", result.getFavoriteCultures().stream().findFirst().get());
+        assertEquals("brazilian", result.getFavoriteCultures().stream().findFirst().get());
         verify(repositoryPort, times(1)).findByEmail(email);
         verify(mealdbApiPort, times(1)).listCultures();
     }
 
     @Test
     void shouldFetchAndAddPreferenceAndRestriction() {
-        var mockResponse = new CategoryResponse(List.of(new CategoryObject("Seafood")));
+        var mockResponse = new CategoryResponse(List.of(new CategoryObject("seafood")));
         when(mealdbApiPort.listCategories()).thenReturn(mockResponse.meals().stream().map(CategoryObject::category).toList());
 
         User user = new User(UUID.randomUUID(),email, "password", Set.of("USER"));
         when(repositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
 
-        var preference = userService.addPreferences(email, List.of("Seafood"));
-        var restriction = userService.addRestrictions(email, List.of("Seafood"));
+        var preference = userService.addPreferences(email, List.of("seafood"));
+        var restriction = userService.addRestrictions(email, List.of("seafood"));
 
-        assertEquals("Seafood", preference.getPreferences().stream().findFirst().get());
-        assertEquals("Seafood", restriction.getPreferences().stream().findFirst().get());
+        assertEquals("seafood", preference.getPreferences().stream().findFirst().get());
+        assertEquals("seafood", restriction.getPreferences().stream().findFirst().get());
         verify(repositoryPort, times(2)).findByEmail(email);
         verify(mealdbApiPort, times(2)).listCategories();
     }
 
     @Test
     void shouldThrowCultureNotFound() {
-        var mockResponse = new CultureResponse(List.of(new CultureObject("Brazilian")));
+        var mockResponse = new CultureResponse(List.of(new CultureObject("brazilian")));
         when(mealdbApiPort.listCultures()).thenReturn(mockResponse.meals().stream().map(CultureObject::culture).toList());
 
         User user = new User(UUID.randomUUID(),email, "password", Set.of("USER"));
         when(repositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
 
-        assertThrows(ApiException.class, () -> {userService.addCultures(email, List.of("Canadian"));});
+        assertThrows(ApiException.class, () -> {userService.addCultures(email, List.of("canadian"));});
 
         verify(repositoryPort, times(1)).findByEmail(email);
         verify(mealdbApiPort, times(1)).listCultures();
@@ -104,14 +104,14 @@ public class UserServiceTest {
 
     @Test
     void shouldThrowCategoryNotFound() {
-        var mockResponse = new CategoryResponse(List.of(new CategoryObject("Pork")));
+        var mockResponse = new CategoryResponse(List.of(new CategoryObject("pork")));
         when(mealdbApiPort.listCategories()).thenReturn(mockResponse.meals().stream().map(CategoryObject::category).toList());
 
         User user = new User(UUID.randomUUID(),email, "password", Set.of("USER"));
         when(repositoryPort.findByEmail(email)).thenReturn(Optional.of(user));
 
-        assertThrows(ApiException.class, () -> {userService.addPreferences(email, List.of("Vegan"));});
-        assertThrows(ApiException.class, () -> {userService.addRestrictions(email, List.of("Vegan"));});
+        assertThrows(ApiException.class, () -> {userService.addPreferences(email, List.of("vegan"));});
+        assertThrows(ApiException.class, () -> {userService.addRestrictions(email, List.of("vegan"));});
 
         verify(repositoryPort, times(2)).findByEmail(email);
         verify(mealdbApiPort, times(2)).listCategories();

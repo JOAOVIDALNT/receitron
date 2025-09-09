@@ -109,6 +109,7 @@ docker compose up --build
 A api está configurada pra rodar na porta 8080 do container, podendo ser possível ser referenciada pelo localhost.
 
 url da documentação swagger: http://localhost:8080/swagger-ui/index.html
+- Em authorize, basta adicionar o token oriundo do login, o prefixo "Bearer " já está setado.
 
 O projeto está rodando na versão 21 do java caso queira testar localmente e utilizei o maven como gerenciador de dependências,
 

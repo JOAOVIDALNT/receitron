@@ -18,17 +18,16 @@ import java.util.List;
 public class MealdbApiAdapter implements MealdbApiPort {
 
     private final WebClient webClient;
+    private final RestClient restClient;
+    private String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
 
-    public MealdbApiAdapter(WebClient.Builder builder) {
-        this.webClient = builder.baseUrl("https://www.themealdb.com/api/json/v1/1/").build();
+    public MealdbApiAdapter(WebClient.Builder webClientBuilder, RestClient.Builder restClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl(BASE_URL).build();
+        this.restClient = restClientBuilder.baseUrl(BASE_URL).build();
     }
 
     @Override
     public List<String> listCultures() {
-        RestClient restClient = RestClient.builder()
-                .baseUrl("https://www.themealdb.com/api/json/v1/1/")
-                .build();
-
         try {
             CultureResponse result = restClient.get()
                     .uri("list.php?a=list")
@@ -52,10 +51,6 @@ public class MealdbApiAdapter implements MealdbApiPort {
 
     @Override
     public List<String> listCategories() {
-        RestClient restClient = RestClient.builder()
-                .baseUrl("https://www.themealdb.com/api/json/v1/1/")
-                .build();
-
         try {
             CategoryResponse result = restClient.get()
                     .uri("list.php?c=list")

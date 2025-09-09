@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 public class UserControllerTest {
 
     @Autowired
@@ -69,15 +71,14 @@ public class UserControllerTest {
     @WithMockUser(username = "tester@email.com", roles = {"USER"})
     void shouldAddRestrictions() throws Exception {
         User user = new User(UUID.randomUUID(),email, password, Set.of("USER"));
-        var restrictions = List.of("Pork", "Lamb");
+        var restrictions = List.of("pork", "lamb");
 
-        when(userService.addPreferences("tester@email.com", restrictions)).thenReturn(user);
+        when(userService.addRestrictions("tester@email.com", restrictions)).thenReturn(user);
 
         mockMvc.perform(post("/user/add/restrictions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(restrictions)))
                 .andExpect(status().isOk());
-
     }
 
     //TODO: TEST ERRORS
