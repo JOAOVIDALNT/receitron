@@ -137,6 +137,36 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+                <configuration>
+                    <excludes>
+                        <!-- Classe principal do Spring Boot -->
+                        <exclude>**/Application.*</exclude>
+
+                        <!-- Configurações e Beans -->
+                        <exclude>**/config/**</exclude>
+                        <exclude>**/*Config.*</exclude>
+
+                        <!-- Entidades JPA -->
+                        <exclude>**/entities/**</exclude>
+                        <exclude>**/*Entity.*</exclude>
+
+                        <!-- DTOs / Records de transporte -->
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/*DTO.*</exclude>
+
+                        <!-- Exceptions customizadas -->
+                        <exclude>**/*Exception.*</exclude>
+
+                        <!-- Enums simples -->
+                        <exclude>**/*Enum.*</exclude>
+
+                        <!-- Adaptadores de entrada/saída (infraestrutura) -->
+                        <exclude>**/adapter/**</exclude>
+
+                        <!-- Classes geradas automaticamente -->
+                        <exclude>**/generated/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
