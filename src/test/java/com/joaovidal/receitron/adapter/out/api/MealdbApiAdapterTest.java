@@ -7,12 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -169,15 +173,37 @@ public class MealdbApiAdapterTest {
         assertEquals(HttpStatus.BAD_GATEWAY, ex2.getStatus());
     }
     @Test
-    void shouldThrowClientErrorOnRequestFailure() {
+    void shouldThrowClientErrorOnRestClientRequestFailure() {
         when(restClient.get()).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
-        ApiException ex1 = assertThrows(ApiException.class, () -> mealdbApiAdapter.listCultures());
-        ApiException ex2 = assertThrows(ApiException.class, () -> mealdbApiAdapter.listCategories());
-        assertEquals("Error fetching data from mealdb api", ex1.getMessage());
-        assertEquals("Error fetching data from mealdb api", ex2.getMessage());
-        assertEquals(HttpStatus.BAD_GATEWAY, ex1.getStatus());
-        assertEquals(HttpStatus.BAD_GATEWAY, ex2.getStatus());
+        var list = new ArrayList<ApiException>();
+        list.add(assertThrows(ApiException.class, () -> mealdbApiAdapter.listCultures()));
+        list.add(assertThrows(ApiException.class, () -> mealdbApiAdapter.listCategories()));
+
+        list.forEach(x -> {
+            assertEquals("Error fetching data from mealdb api", x.getMessage());
+            assertEquals(HttpStatus.BAD_GATEWAY, x.getStatus());
+        });
     }
+
+    @Test
+    void shouldThrowClientErrorOnWebClientRequestFailure() {
+        when(webClient.get())
+                .thenThrow(new WebClientResponseException(
+                        400,
+                        "Bad Request",
+                        HttpHeaders.EMPTY,
+                        new byte[0],
+                        StandardCharsets.UTF_8
+                ));
+
+
+        assertThrows(ApiException.class, () -> mealdbApiAdapter.getRandomRecipe());
+        assertThrows(ApiException.class, () -> mealdbApiAdapter.getRecipeById(anyInt()));
+        assertThrows(ApiException.class, () -> mealdbApiAdapter.getRecipesByCategory(anyString()));
+        assertThrows(ApiException.class, () -> mealdbApiAdapter.getRecipesByCulture(anyString()));
+    }
+
+    // TODO: CONTINUE TESTING FAILURES
 
 }
