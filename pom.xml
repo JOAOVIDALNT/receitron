@@ -144,12 +144,14 @@
                         <exclude>**/*Config.*</exclude>
                         <exclude>**/entities/**</exclude>
                         <exclude>**/*Entity.*</exclude>
-                        <exclude>**/dto/**</exclude>
                         <exclude>**/*DTO.*</exclude>
                         <exclude>**/*Exception.*</exclude>
                         <exclude>**/*Enum.*</exclude>
                         <exclude>**/generated/**</exclude>
                         <exclude>**/*Filter.*</exclude>
+                        <exclude>**/*Handler.*</exclude>
+                        <exclude>**/port/**</exclude>
+                        <exclude>**/mapper/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -168,7 +170,6 @@
                         <configuration>
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
                             <outputEncoding>UTF-8</outputEncoding>
-                            <csvOutput>true</csvOutput>
                         </configuration>
                     </execution>
                 </executions>

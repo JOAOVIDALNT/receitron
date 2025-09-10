@@ -4,7 +4,6 @@ import com.joaovidal.receitron.adapter.in.exception.ApiException;
 import com.joaovidal.receitron.adapter.in.web.dto.*;
 import com.joaovidal.receitron.domain.model.Recipe;
 import com.joaovidal.receitron.domain.port.out.MealdbApiPort;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.*;
@@ -19,9 +18,9 @@ public class MealdbApiAdapter implements MealdbApiPort {
 
     private final WebClient webClient;
     private final RestClient restClient;
-    private String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
 
     public MealdbApiAdapter(WebClient.Builder webClientBuilder, RestClient.Builder restClientBuilder) {
+        String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
         this.webClient = webClientBuilder.baseUrl(BASE_URL).build();
         this.restClient = restClientBuilder.baseUrl(BASE_URL).build();
     }

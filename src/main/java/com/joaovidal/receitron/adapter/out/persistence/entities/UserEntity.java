@@ -1,4 +1,4 @@
-package com.joaovidal.receitron.adapter.out.persistence.entity;
+package com.joaovidal.receitron.adapter.out.persistence.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

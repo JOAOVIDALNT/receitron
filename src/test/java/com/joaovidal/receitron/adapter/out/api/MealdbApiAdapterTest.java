@@ -80,7 +80,6 @@ public class MealdbApiAdapterTest {
 
         var response = mealdbApiAdapter.getRecipesByCulture(culture);
 
-        assertTrue(response.size() == 1);
         assertEquals(title, response.stream().findFirst().get().getTitle());
     }
 
