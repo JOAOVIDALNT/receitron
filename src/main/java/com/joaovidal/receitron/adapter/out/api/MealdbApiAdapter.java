@@ -34,7 +34,7 @@ public class MealdbApiAdapter implements MealdbApiPort {
                     .body(CultureResponse.class);
 
             if (result == null || result.meals() == null) {
-                throw new ApiException("Failed to fetch categories", HttpStatus.BAD_GATEWAY);
+                throw new ApiException("Failed to fetch cultures", HttpStatus.BAD_GATEWAY);
             }
 
             return result.meals().stream().map(CultureObject::culture).toList();
@@ -43,7 +43,10 @@ public class MealdbApiAdapter implements MealdbApiPort {
             throw new ApiException("Error fetching data from mealdb api", HttpStatus.BAD_GATEWAY);
         } catch (RestClientException e) {
             throw new ApiException("Error communicating with mealdb api", HttpStatus.BAD_GATEWAY);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            throw new ApiException(e.getMessage(), e.getStatus());
+        }
+        catch (Exception e) {
             throw new ApiException("Unknow error on mealdb api request", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,7 +68,10 @@ public class MealdbApiAdapter implements MealdbApiPort {
             throw new ApiException("Error fetching data from mealdb api", HttpStatus.BAD_GATEWAY);
         } catch (RestClientException e) {
             throw new ApiException("Error communicating with mealdb api", HttpStatus.BAD_GATEWAY);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            throw new ApiException(e.getMessage(), e.getStatus());
+        }
+        catch (Exception e) {
             throw new ApiException("Unknow error on mealdb api request", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -91,7 +97,10 @@ public class MealdbApiAdapter implements MealdbApiPort {
             throw new ApiException("Error fetching data from mealdb api", HttpStatus.BAD_GATEWAY);
         } catch (WebClientRequestException e) {
             throw new ApiException("Error communicating with mealdb api", HttpStatus.BAD_GATEWAY);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            throw new ApiException(e.getMessage(), e.getStatus());
+        }
+        catch (Exception e) {
             throw new ApiException("Unknow error on mealdb api request", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -115,7 +124,10 @@ public class MealdbApiAdapter implements MealdbApiPort {
             throw new ApiException("Error fetching data from mealdb api", HttpStatus.BAD_GATEWAY);
         } catch (WebClientRequestException e) {
             throw new ApiException("Error communicating with mealdb api", HttpStatus.BAD_GATEWAY);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            throw new ApiException(e.getMessage(), e.getStatus());
+        }
+        catch (Exception e) {
             throw new ApiException("Unknow error on mealdb api request", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -139,7 +151,10 @@ public class MealdbApiAdapter implements MealdbApiPort {
             throw new ApiException("Error fetching data from mealdb api", HttpStatus.BAD_GATEWAY);
         } catch (WebClientRequestException e) {
             throw new ApiException("Error communicating with mealdb api", HttpStatus.BAD_GATEWAY);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            throw new ApiException(e.getMessage(), e.getStatus());
+        }
+        catch (Exception e) {
             throw new ApiException("Unknow error on mealdb api request", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -165,7 +180,10 @@ public class MealdbApiAdapter implements MealdbApiPort {
             throw new ApiException("Error fetching data from mealdb api", HttpStatus.BAD_GATEWAY);
         } catch (WebClientRequestException e) {
             throw new ApiException("Error communicating with mealdb api", HttpStatus.BAD_GATEWAY);
-        } catch (Exception e) {
+        } catch (ApiException e) {
+            throw new ApiException(e.getMessage(), e.getStatus());
+        }
+         catch (Exception e) {
             throw new ApiException("Unknow error on mealdb api request", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

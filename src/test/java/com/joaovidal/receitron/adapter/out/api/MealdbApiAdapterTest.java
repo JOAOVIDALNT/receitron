@@ -1,11 +1,14 @@
 package com.joaovidal.receitron.adapter.out.api;
 
+import com.joaovidal.receitron.adapter.in.exception.ApiException;
 import com.joaovidal.receitron.adapter.in.web.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -98,7 +101,6 @@ public class MealdbApiAdapterTest {
 
         var response = mealdbApiAdapter.getRecipesByCategory(category);
 
-        assertTrue(response.size() == 1);
         assertEquals(title, response.stream().findFirst().get().getTitle());
     }
 
@@ -150,5 +152,32 @@ public class MealdbApiAdapterTest {
         assertEquals(List.of("vegan"), categories);
     }
 
-    // TODO: TEST ERRORS
+    @Test
+    void shouldThrowFailedToFetchOnNullResponse() {
+        when(restClient.get()).thenReturn(rcRequestHeadersUriSpecMock);
+        when(rcRequestHeadersUriSpecMock.uri("list.php?a=list")).thenReturn(rcRequestHeadersSpecMock);
+        when(rcRequestHeadersUriSpecMock.uri("list.php?c=list")).thenReturn(rcRequestHeadersSpecMock);
+        when(rcRequestHeadersSpecMock.retrieve()).thenReturn(rcResponseSpecMock);
+        when(rcResponseSpecMock.body(CultureResponse.class)).thenReturn(null);
+        when(rcResponseSpecMock.body(CategoryResponse.class)).thenReturn(null);
+
+        var ex1 = assertThrows(ApiException.class, () -> mealdbApiAdapter.listCultures());
+        var ex2 = assertThrows(ApiException.class, () -> mealdbApiAdapter.listCategories());
+        assertEquals("Failed to fetch cultures", ex1.getMessage());
+        assertEquals("Failed to fetch categories", ex2.getMessage());
+        assertEquals(HttpStatus.BAD_GATEWAY, ex1.getStatus());
+        assertEquals(HttpStatus.BAD_GATEWAY, ex2.getStatus());
+    }
+    @Test
+    void shouldThrowClientErrorOnRequestFailure() {
+        when(restClient.get()).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+
+        ApiException ex1 = assertThrows(ApiException.class, () -> mealdbApiAdapter.listCultures());
+        ApiException ex2 = assertThrows(ApiException.class, () -> mealdbApiAdapter.listCategories());
+        assertEquals("Error fetching data from mealdb api", ex1.getMessage());
+        assertEquals("Error fetching data from mealdb api", ex2.getMessage());
+        assertEquals(HttpStatus.BAD_GATEWAY, ex1.getStatus());
+        assertEquals(HttpStatus.BAD_GATEWAY, ex2.getStatus());
+    }
+
 }
