@@ -5,6 +5,7 @@ import com.joaovidal.receitron.adapter.in.web.dto.CategoryObject;
 import com.joaovidal.receitron.adapter.in.web.dto.CategoryResponse;
 import com.joaovidal.receitron.adapter.in.web.dto.CultureObject;
 import com.joaovidal.receitron.adapter.in.web.dto.CultureResponse;
+import com.joaovidal.receitron.adapter.out.api.MealdbApiAdapter;
 import com.joaovidal.receitron.domain.model.User;
 import com.joaovidal.receitron.domain.port.out.MealdbApiPort;
 import com.joaovidal.receitron.domain.port.out.UserRepositoryPort;
