@@ -1,10 +1,9 @@
 package com.joaovidal.receitron.adapter.out.persistence.mapper;
 
-import com.joaovidal.receitron.adapter.out.persistence.entity.UserEntity;
+import com.joaovidal.receitron.adapter.out.persistence.entities.UserEntity;
 import com.joaovidal.receitron.domain.model.User;
 
 import java.util.List;
-import java.util.Set;
 
 public class UserEntityMapper {
 
